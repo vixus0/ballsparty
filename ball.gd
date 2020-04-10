@@ -27,3 +27,7 @@ func _input(event):
 func set_current():
 	current_player = true
 	get_node("cam").current = true
+	
+func set_name(new_name):
+	player_name = new_name
+	get_node("label").text = new_name

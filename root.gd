@@ -18,6 +18,7 @@ var waypoints = {}
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	me = BALL.instance()
+	me.set_current()
 	peer = NetworkedMultiplayerENet.new()
 	my_ip = IP.get_local_addresses()[0]
 	menu = get_node("static/menu/grid")
@@ -40,7 +41,7 @@ func _connected_ok():
 	connected = true
 	menu.visible = false
 	get_tree().paused = false
-	_create_player(name)
+	add_child(me)
 
 func _connected_fail():
 	menu.visible = true
@@ -49,27 +50,24 @@ func _connected_fail():
 func _server_disconnected():
 	menu.visible = true
 	get_tree().paused = true
-	
-func _create_player(host_name):
-	me.player_name = host_name
-	me.set_current()
-	add_child(me)
 
 func _on_btn_connect_pressed():
-	var name = menu.get_node("edit_name").text
+	var player_name = menu.get_node("edit_name").text
 	var server_ip = menu.get_node("edit_ip").text
 	var server_port = int(menu.get_node("edit_port").text)
-	print("client ", name, server_ip, server_port)
+	print("client ", player_name, server_ip, server_port)
 	peer.create_client(server_ip, server_port)
 	get_tree().set_network_peer(peer)
+	me.set_name(player_name)
 
 func _on_btn_host_pressed():
-	var name = menu.get_node("edit_name").text
+	var player_name = menu.get_node("edit_name").text
 	var server_port = int(menu.get_node("edit_port").text)
 	var max_players = int(menu.get_node("edit_max").text)
-	print("server ", name, server_port, max_players)
+	print("server ", player_name, server_port, max_players)
 	peer.create_server(server_port, max_players)
 	get_tree().set_network_peer(peer)
+	me.set_name(player_name)
 	_connected_ok()
 	server = true
 	
@@ -88,6 +86,7 @@ func _process(delta):
 	if tick > PERIOD:
 		tick = 0
 		if server:
+			waypoints[1] = me.waypoint
 			for id in player_info.keys():
 				rpc_id(id, "update_all_wp", waypoints)
 		else:
@@ -98,7 +97,7 @@ remote func register_player(info):
 	var id = get_tree().get_rpc_sender_id()
 	# Store the info
 	var ball = BALL.instance()
-	ball.player_name = info.name
+	ball.set_name(info.name)
 	ball.set_global_position(info.pos)
 	ball.name = "player-" + str(id)
 	player_info[id] = ball
@@ -109,7 +108,6 @@ remote func update_wp(pos):
 	var id = get_tree().get_rpc_sender_id()
 	player_info[id].waypoint = pos
 	waypoints[id] = pos
-	print(id)
 	
 remote func update_all_wp(wps):
 	for id in wps.keys():

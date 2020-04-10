@@ -24,3 +24,13 @@ limit_smoothed = true
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 smoothing_enabled = true
+
+[node name="label" type="Label" parent="."]
+margin_left = -20.0
+margin_top = -43.0
+margin_right = 20.0
+margin_bottom = -29.0
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -75,7 +75,7 @@ margin_left = 80.0
 margin_top = 28.0
 margin_right = 144.0
 margin_bottom = 52.0
-text = "127.0.0.1"
+text = "192.168.178.38"
 
 [node name="edit_port" type="LineEdit" parent="static/menu/grid"]
 margin_left = 148.0
