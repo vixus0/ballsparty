@@ -1,23 +1,20 @@
 extends Node
 
-var peer
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	peer = NetworkedMultiplayerENet.new()
-	peer.create_server(9999, 3)
-	get_tree().set_network_peer(peer)
-	
-	get_tree().connect("network_peer_connected", self, "_player_connected")
-	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
-	get_tree().connect("connected_to_server", self, "_connected_ok")
-	get_tree().connect("connection_failed", self, "_connected_fail")
-	get_tree().connect("server_disconnected", self, "_server_disconnected")
-
 # Player info, associate ID to data
 var player_info = {}
 # Info we send to other players
 var my_info = { name = "Bhirangatang", favorite_color = Color8(255, 0, 0) }
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass
+
+func init(player_name):
+	my_info.name = player_name
+# warning-ignore:return_value_discarded
+	get_tree().connect("network_peer_connected", self, "_player_connected")
+# warning-ignore:return_value_discarded
+	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 
 func _player_connected(id):
 	# Called on both clients and server when a peer connects. Send my info to it.
@@ -28,15 +25,6 @@ func _player_connected(id):
 func _player_disconnected(id):
 	player_info.erase(id) # Erase player from info.
 	print("disconnected ", id)
-
-func _connected_ok():
-	pass # Only called on clients, not server. Will go unused; not useful here.
-
-func _server_disconnected():
-	pass # Server kicked us; show error and abort.
-
-func _connected_fail():
-	pass # Could not even connect to server; abort.
 
 remote func register_player(info):
 	# Get the id of the RPC sender.

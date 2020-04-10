@@ -25,6 +25,12 @@ mesh = SubResource( 2 )
 
 [node name="cam" type="Camera2D" parent="ball"]
 current = true
+limit_left = 0
+limit_top = 0
+limit_smoothed = true
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = true
 
 [node name="shouter" type="Node2D" parent="."]
 position = Vector2( 557, 326 )
@@ -40,3 +46,115 @@ max_distance = 500.0
 
 [node name="lobby" type="Node" parent="."]
 script = ExtResource( 4 )
+
+[node name="menu" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="grid" type="GridContainer" parent="menu"]
+margin_left = 40.0
+margin_top = 40.0
+margin_right = 140.0
+margin_bottom = 64.0
+columns = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lbl_myip" type="Label" parent="menu/grid"]
+margin_right = 76.0
+margin_bottom = 14.0
+text = "My IP"
+
+[node name="lbl_myip_value" type="Label" parent="menu/grid"]
+margin_left = 80.0
+margin_right = 144.0
+margin_bottom = 14.0
+text = "127.0.0.1"
+
+[node name="blank3" type="Control" parent="menu/grid"]
+margin_left = 148.0
+margin_right = 206.0
+margin_bottom = 14.0
+
+[node name="lbl_name" type="Label" parent="menu/grid"]
+margin_top = 23.0
+margin_right = 76.0
+margin_bottom = 37.0
+text = "Name"
+
+[node name="edit_name" type="LineEdit" parent="menu/grid"]
+margin_left = 80.0
+margin_top = 18.0
+margin_right = 144.0
+margin_bottom = 42.0
+text = "Assmaster"
+
+[node name="blank" type="Control" parent="menu/grid"]
+margin_left = 148.0
+margin_top = 18.0
+margin_right = 206.0
+margin_bottom = 42.0
+
+[node name="lbl_ip" type="Label" parent="menu/grid"]
+margin_top = 51.0
+margin_right = 76.0
+margin_bottom = 65.0
+text = "Server IP"
+
+[node name="edit_ip" type="LineEdit" parent="menu/grid"]
+margin_left = 80.0
+margin_top = 46.0
+margin_right = 144.0
+margin_bottom = 70.0
+text = "127.0.0.1"
+
+[node name="edit_port" type="LineEdit" parent="menu/grid"]
+margin_left = 148.0
+margin_top = 46.0
+margin_right = 206.0
+margin_bottom = 70.0
+text = "9999"
+
+[node name="lbl_max" type="Label" parent="menu/grid"]
+margin_top = 79.0
+margin_right = 76.0
+margin_bottom = 93.0
+text = "Max Players"
+
+[node name="edit_max" type="LineEdit" parent="menu/grid"]
+margin_left = 80.0
+margin_top = 74.0
+margin_right = 144.0
+margin_bottom = 98.0
+text = "10"
+
+[node name="blank2" type="Control" parent="menu/grid"]
+margin_left = 148.0
+margin_top = 74.0
+margin_right = 206.0
+margin_bottom = 98.0
+
+[node name="blank4" type="Control" parent="menu/grid"]
+margin_top = 102.0
+margin_right = 76.0
+margin_bottom = 122.0
+
+[node name="btn_connect" type="Button" parent="menu/grid"]
+margin_left = 80.0
+margin_top = 102.0
+margin_right = 144.0
+margin_bottom = 122.0
+text = "Connect"
+
+[node name="btn_host" type="Button" parent="menu/grid"]
+margin_left = 148.0
+margin_top = 102.0
+margin_right = 206.0
+margin_bottom = 122.0
+text = "Host"
+[connection signal="pressed" from="menu/grid/btn_connect" to="." method="_on_btn_connect_pressed"]
+[connection signal="pressed" from="menu/grid/btn_host" to="." method="_on_btn_host_pressed"]
