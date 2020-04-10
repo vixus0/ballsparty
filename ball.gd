@@ -7,6 +7,7 @@ extends Node2D
 
 var waypoint = Vector2()
 var player_name = "None"
+var current_player = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -20,5 +21,9 @@ func _process(delta):
 		self.set_global_position(self.get_global_position() - dp * 5 * delta)	
 	
 func _input(event):
-	if (event is InputEventMouseButton and event.button_index == BUTTON_LEFT):
+	if current_player and (event is InputEventMouseButton and event.button_index == BUTTON_LEFT):
 		self.waypoint = get_global_mouse_position()
+
+func set_current():
+	current_player = true
+	get_node("cam").current = true

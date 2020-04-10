@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://cleves.ogg" type="AudioStream" id=2]
 [ext_resource path="res://root.gd" type="Script" id=3]
-[ext_resource path="res://lobby.gd" type="Script" id=4]
 
 [sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 0.141176, 0.207843, 0.411765, 1 )
@@ -28,7 +27,6 @@ autoplay = true
 max_distance = 500.0
 
 [node name="lobby" type="Node" parent="."]
-script = ExtResource( 4 )
 
 [node name="static" type="CanvasLayer" parent="."]
 

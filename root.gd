@@ -1,18 +1,23 @@
 extends Node2D
 
 const BALL = preload("res://ball.tscn")
+const PERIOD = 0.5
 
 var my_ip
 var menu
 var peer
+var server = false
 var connected = false
 var me
+var tick = 0
 
 # Player info, associate ID to data
 var player_info = {}
+var waypoints = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	me = BALL.instance()
 	peer = NetworkedMultiplayerENet.new()
 	my_ip = IP.get_local_addresses()[0]
 	menu = get_node("static/menu/grid")
@@ -46,8 +51,8 @@ func _server_disconnected():
 	get_tree().paused = true
 	
 func _create_player(host_name):
-	me = BALL.instance()
 	me.player_name = host_name
+	me.set_current()
 	add_child(me)
 
 func _on_btn_connect_pressed():
@@ -66,6 +71,7 @@ func _on_btn_host_pressed():
 	peer.create_server(server_port, max_players)
 	get_tree().set_network_peer(peer)
 	_connected_ok()
+	server = true
 	
 func _player_connected(id):
 	# Called on both clients and server when a peer connects. Send my info to it.
@@ -76,6 +82,16 @@ func _player_connected(id):
 func _player_disconnected(id):
 	player_info.erase(id) # Erase player from info.
 	print("disconnected ", id)
+	
+func _process(delta):
+	tick += delta
+	if tick > PERIOD:
+		tick = 0
+		if server:
+			for id in player_info.keys():
+				rpc_id(id, "update_all_wp", waypoints)
+		else:
+			rpc_id(1, "update_wp", me.waypoint)
 
 remote func register_player(info):
 	# Get the id of the RPC sender.
@@ -84,5 +100,18 @@ remote func register_player(info):
 	var ball = BALL.instance()
 	ball.player_name = info.name
 	ball.set_global_position(info.pos)
+	ball.name = "player-" + str(id)
 	player_info[id] = ball
+	add_child(ball)
 	print("register ", id, info)
+	
+remote func update_wp(pos):
+	var id = get_tree().get_rpc_sender_id()
+	player_info[id].waypoint = pos
+	waypoints[id] = pos
+	print(id)
+	
+remote func update_all_wp(wps):
+	for id in wps.keys():
+		if player_info.has(id):
+			player_info[id].waypoint = wps[id]
