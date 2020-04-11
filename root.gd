@@ -18,6 +18,7 @@ var waypoints = {}
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	me = BALL.instance()
+	me.set_global_position(Vector2(500,250))
 	me.set_current()
 	peer = NetworkedMultiplayerENet.new()
 	my_ip = IP.get_local_addresses()[0]
