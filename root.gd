@@ -97,7 +97,9 @@ func _process(delta):
 			rpc_id(1, "update_wp", me.waypoint)
 			
 func _speech(data):
-	if not server:
+	if server:
+		audios[1] = data
+	else:
 		rpc_id(1, "update_speech", data)
 
 remote func register_player(info):

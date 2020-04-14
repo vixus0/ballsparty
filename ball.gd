@@ -26,7 +26,7 @@ func _process(delta):
 	if recording:
 		if rec_tick > REC_PERIOD:
 			rec_tick = 0.0
-			var audio_data = fx_rec.get_recording()
+			var audio_data = fx_rec.get_recording().get_data()
 			fx_rec.set_recording_active(false)
 			fx_rec.set_recording_active(true)
 			get_parent()._speech(audio_data)
