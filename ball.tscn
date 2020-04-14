@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ball.gd" type="Script" id=1]
 
@@ -12,6 +12,9 @@ albedo_color = Color( 0.141176, 0.207843, 0.411765, 1 )
 material = SubResource( 2 )
 radius = 25.0
 height = 50.0
+
+[sub_resource type="AudioStreamSample" id=4]
+stereo = true
 
 [node name="ball" type="RigidBody2D"]
 mode = 2
@@ -40,3 +43,6 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="speech" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource( 4 )

@@ -14,6 +14,7 @@ var tick = 0
 # Player info, associate ID to data
 var player_info = {}
 var waypoints = {}
+var audios = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -79,6 +80,7 @@ func _player_connected(id):
 	print("info ", player_info)
 
 func _player_disconnected(id):
+	remove_child(player_info[id])
 	player_info.erase(id) # Erase player from info.
 	print("disconnected ", id)
 	
@@ -90,8 +92,13 @@ func _process(delta):
 			waypoints[1] = me.waypoint
 			for id in player_info.keys():
 				rpc_id(id, "update_all_wp", waypoints)
+				rpc_id(id, "update_all_speech", audios)
 		else:
 			rpc_id(1, "update_wp", me.waypoint)
+			
+func _speech(data):
+	if not server:
+		rpc_id(1, "update_speech", data)
 
 remote func register_player(info):
 	# Get the id of the RPC sender.
@@ -114,3 +121,16 @@ remote func update_all_wp(wps):
 	for id in wps.keys():
 		if player_info.has(id):
 			player_info[id].waypoint = wps[id]
+			
+remote func update_speech(data):
+	print("Updating speech ", data, data.size())
+	var id = get_tree().get_rpc_sender_id()
+	player_info[id].get_node("speech").stream.set_data(data)
+	player_info[id].get_node("speech").play()
+	audios[id] = data
+	
+remote func update_all_speech(audios):
+	for id in audios.keys():
+		if player_info.has(id):
+			player_info[id].get_node("speech").stream.set_data(audios[id])
+			player_info[id].get_node("speech").play()
